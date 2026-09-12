@@ -319,10 +319,17 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   color:var(--ink-soft);max-width:20ch;line-height:1.5;
 }
 .exp__body p{font-size:clamp(18px,1.7vw,23px);line-height:1.5;letter-spacing:-.024em;max-width:38ch}
-.geo{display:flex;flex-wrap:wrap;gap:0 44px;margin-top:38px;padding-top:24px;border-top:1px solid var(--hair)}
-.geo div{padding-right:0}
+.geo{
+  display:grid;grid-template-columns:auto minmax(0,1fr);
+  gap:0 clamp(28px,4vw,60px);
+  margin-top:38px;padding-top:24px;border-top:1px solid var(--hair);
+}
 .geo dt{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft)}
 .geo dd{font-size:16px;margin-top:5px;letter-spacing:-.018em}
+.geo dd span{
+  display:block;margin-top:6px;max-width:34ch;
+  font-size:14px;line-height:1.5;color:var(--ink-soft);letter-spacing:-.008em;
+}
 
 /* ===== Поиск по фото ================================================ */
 .photo__grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(30px,5vw,80px);align-items:end}
@@ -525,7 +532,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   .shot--wide img{aspect-ratio:4/3}
   .foot__top{grid-template-columns:1fr;gap:30px}
   .foot__brand-col{grid-column:span 1}
-  .geo{gap:0 28px}
+  .geo{grid-template-columns:1fr;gap:22px 0}
   .btn{width:100%;justify-content:center}
   .hero__cta .btn{width:100%}
   .control__grid{grid-template-columns:1fr}
