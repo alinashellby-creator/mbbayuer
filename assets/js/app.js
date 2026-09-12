@@ -138,7 +138,9 @@
   }
 
   /* ---------- Отзывы --------------------------------------------------- */
+  var REV_VISIBLE = 6;   /* сколько отзывов видно до нажатия «Показать все» */
   var revSection = $('#reviews');
+
   if (revSection) {
     if (!reviews.length) {
       revSection.remove();
@@ -148,17 +150,22 @@
       });
     } else {
       $('#revGrid').innerHTML = reviews.map(function (r, i) {
-        var body = '';
+        var folded = i >= REV_VISIBLE ? ' is-folded' : '';
+
+        /* Скриншот переписки */
         if (r.image) {
-          body += '<figure class="rev__shot"><button type="button" data-img="' + esc(r.image) + '" ' +
-                  'aria-label="Открыть отзыв полностью">' +
-                  '<img src="' + esc(r.image) + '" alt="Отзыв клиента' + (r.name ? ', ' + esc(r.name) : '') + '" loading="lazy">' +
-                  '</button></figure>';
+          return '<figure class="rev rev--shot' + folded + '">' +
+                   '<button type="button" data-img="' + esc(r.image) + '" ' +
+                     'aria-label="Открыть отзыв крупнее">' +
+                     '<img src="' + esc(r.image) + '" loading="lazy" decoding="async" ' +
+                       'alt="' + esc(r.alt || r.text || 'Отзыв клиента') + '">' +
+                   '</button>' +
+                 '</figure>';
         }
-        if (r.text) {
-          body += '<p class="rev__text' + (r.featured ? '' : ' is-clamped') + '">' + esc(r.text) + '</p>' +
-                  '<button class="rev__more" type="button" data-rev="' + i + '">Читать полностью</button>';
-        }
+
+        /* Текстовый отзыв */
+        var body = '<p class="rev__text' + (r.featured ? '' : ' is-clamped') + '">' + esc(r.text) + '</p>' +
+                   '<button class="rev__more" type="button" data-rev="' + i + '">Читать полностью</button>';
         var meta = '';
         if (r.name || r.city || r.date) {
           meta = '<div class="rev__meta">' +
@@ -166,11 +173,12 @@
                    '<span class="rev__place">' + esc([r.city, r.date].filter(Boolean).join(' · ')) + '</span>' +
                  '</div>';
         }
-        return '<article class="rev rv' + (r.featured ? ' rev--big' : '') + '" ' +
-               'style="transition-delay:' + Math.min(i * 60, 240) + 'ms">' + body + meta + '</article>';
+        return '<article class="rev rev--text' + (r.featured ? ' rev--big' : '') + folded + '">' +
+                 body + meta +
+               '</article>';
       }).join('');
 
-      /* Убираем «Читать полностью» там, где текст и так помещается целиком.
+      /* Убираем «Читать полностью» там, где текст помещается целиком.
          Вызываем несколькими путями: в фоновой вкладке requestAnimationFrame
          может не сработать, и кнопка осталась бы висеть без надобности. */
       var trimMore = function () {
@@ -184,6 +192,20 @@
       requestAnimationFrame(trimMore);
       setTimeout(trimMore, 400);
       window.addEventListener('load', trimMore);
+
+      /* «Показать все отзывы» */
+      var foldBtn = $('#revMore');
+      if (foldBtn) {
+        if (reviews.length <= REV_VISIBLE) {
+          foldBtn.remove();
+        } else {
+          foldBtn.textContent = 'Показать все отзывы (' + reviews.length + ')';
+          foldBtn.addEventListener('click', function () {
+            $$('.rev.is-folded').forEach(function (el) { el.classList.remove('is-folded'); });
+            foldBtn.remove();
+          });
+        }
+      }
     }
   }
 

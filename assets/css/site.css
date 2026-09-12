@@ -339,15 +339,30 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .ben__d{margin-top:8px;font-size:15.5px;color:var(--ink-soft);line-height:1.55;max-width:42ch}
 
 /* ===== Отзывы ======================================================= */
+/* Кладка в колонках: скриншоты переписок разной высоты встают без дыр
+   и не обрезаются — каждый отзыв виден целиком. */
 .rev-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);
-  gap:clamp(14px,1.5vw,20px);margin-top:clamp(40px,5vw,64px);
+  columns:3;column-gap:clamp(14px,1.5vw,20px);
+  margin-top:clamp(40px,5vw,64px);
 }
 .rev{
+  break-inside:avoid;-webkit-column-break-inside:avoid;
+  margin:0 0 clamp(14px,1.5vw,20px);
   background:var(--white);border:1px solid var(--hair);
-  padding:clamp(22px,2vw,30px);display:flex;flex-direction:column;gap:14px;
 }
-.rev--big{grid-column:span 2}
+.rev.is-folded{display:none}
+
+/* Скриншот переписки */
+.rev--shot{line-height:0;padding:0}
+.rev--shot button{
+  display:block;width:100%;padding:0;line-height:0;cursor:zoom-in;
+  transition:opacity .3s var(--ease);
+}
+.rev--shot button:hover{opacity:.86}
+.rev--shot img{width:100%;height:auto}
+
+/* Текстовый отзыв */
+.rev--text{padding:clamp(22px,2vw,30px);display:flex;flex-direction:column;gap:14px}
 .rev--big .rev__text{font-size:clamp(19px,1.7vw,24px);line-height:1.42;letter-spacing:-.024em;color:var(--ink)}
 .rev__text{font-size:15.5px;line-height:1.58;color:var(--ink-2);white-space:pre-line}
 .rev__text.is-clamped{display:-webkit-box;-webkit-line-clamp:7;-webkit-box-orient:vertical;overflow:hidden}
@@ -355,14 +370,14 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   align-self:flex-start;font-size:14px;color:var(--brass);
   border-bottom:1px solid currentColor;padding-bottom:2px;
 }
-.rev__shot{margin:0;line-height:0;padding:0;width:100%}
-.rev__shot img{width:100%;object-fit:cover;aspect-ratio:3/4}
 .rev__meta{
   margin-top:auto;padding-top:14px;border-top:1px solid var(--hair);
   display:flex;gap:10px;align-items:baseline;font-size:13.5px;
 }
 .rev__name{font-weight:500;letter-spacing:-.015em}
 .rev__place{color:var(--ink-soft);font-size:13px}
+
+.rev-more{margin-top:clamp(26px,3vw,38px);display:flex;justify-content:center}
 
 /* ===== Weekly Privilege ============================================= */
 .weekly__in{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,5vw,80px);align-items:start}
@@ -450,7 +465,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   max-height:86vh;overflow:auto;padding:clamp(26px,3.4vw,44px);
 }
 .modal__box img{width:100%;height:auto}
-.modal__box--img{background:transparent;padding:0;max-width:min(880px,92vw);text-align:center}
+.modal__box--img{background:transparent;padding:0;max-width:min(760px,92vw);text-align:center;overflow:visible}
+.modal__box--img img{max-height:86vh;width:auto;max-width:100%;margin:0 auto}
 .modal__text{font-size:17px;line-height:1.62;color:var(--ink-2);white-space:pre-line}
 .modal__meta{margin-top:20px;padding-top:16px;border-top:1px solid var(--hair);font-size:13.5px;color:var(--ink-soft)}
 .modal__close{
@@ -477,8 +493,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   .photo__grid{grid-template-columns:1fr;gap:30px}
   .exp{grid-template-columns:1fr;gap:26px}
   .weekly__in{grid-template-columns:1fr;gap:26px}
-  .rev-grid{grid-template-columns:repeat(2,1fr)}
-  .rev--big{grid-column:span 2}
+  .rev-grid{columns:2}
   .gallery{grid-template-columns:repeat(2,1fr)}
   .foot__top{grid-template-columns:1fr 1fr}
   .foot__brand-col{grid-column:span 2}
@@ -502,8 +517,8 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 @media (max-width:640px){
   body{font-size:16.5px}
   .step{grid-template-columns:1fr;gap:6px}
-  .rev-grid,.gallery{grid-template-columns:1fr}
-  .rev--big{grid-column:span 1}
+  .rev-grid{columns:1}
+  .gallery{grid-template-columns:1fr}
   .shot--wide img{aspect-ratio:4/3}
   .foot__top{grid-template-columns:1fr;gap:30px}
   .foot__brand-col{grid-column:span 1}
