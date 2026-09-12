@@ -7,6 +7,9 @@
 /* Ссылка для ВСЕХ кнопок сайта. Меняется здесь один раз. */
 const TELEGRAM_URL = "https://t.me/+AIEyOAUPiD8yNjcy";
 
+/* Отдельный канал с отзывами — кнопка в секции «Отзывы». */
+const TELEGRAM_REVIEWS_URL = "https://t.me/+I6I0MnrLk7g3NjJi";
+
 
 /* ---------------------------------------------------------------------
    MAKKA WEEKLY PRIVILEGE

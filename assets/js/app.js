@@ -16,12 +16,21 @@
   }
   function pad(n) { return (n < 10 ? '0' : '') + n; }
 
-  /* ---------- Telegram: одна ссылка на весь сайт --------------------- */
-  $$('[data-tg]').forEach(function (a) {
-    a.setAttribute('href', TELEGRAM_URL);
-    a.setAttribute('target', '_blank');
-    a.setAttribute('rel', 'noopener');
-  });
+  /* ---------- Telegram: ссылки из data.js ----------------------------- */
+  function linkTo(selector, url) {
+    $$(selector).forEach(function (a) {
+      a.setAttribute('href', url);
+      a.setAttribute('target', '_blank');
+      a.setAttribute('rel', 'noopener');
+    });
+  }
+
+  /* Основные кнопки сайта */
+  linkTo('[data-tg]', TELEGRAM_URL);
+
+  /* Канал с отзывами; если он не задан — ведём на основной чат */
+  linkTo('[data-tg-reviews]',
+    typeof TELEGRAM_REVIEWS_URL === 'string' && TELEGRAM_REVIEWS_URL ? TELEGRAM_REVIEWS_URL : TELEGRAM_URL);
 
   /* ---------- Как это работает --------------------------------------- */
   var stepsBox = $('#steps');
